@@ -17,14 +17,19 @@
 
 package com.alibaba.cloud.ai.application.config;
 
-import com.alibaba.cloud.ai.memory.jdbc.SQLiteChatMemory;
-
+import io.modelcontextprotocol.client.McpSyncClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.mcp.AsyncMcpToolCallbackProvider;
+import org.springframework.ai.mcp.SyncMcpToolCallbackProvider;
 import org.springframework.ai.model.tool.ToolCallingManager;
+import org.springframework.ai.tool.ToolCallback;
+import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
 
 /**
  * @author yuluo
@@ -36,15 +41,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AppConfiguration {
 
-	@Bean
-	public ChatMemory SQLiteChatMemory() {
-
-		return new SQLiteChatMemory(
-				null,
-				null,
-				"jdbc:sqlite:src/main/resources/db/saa.db"
-		);
-	}
 
 	@Bean
 	public SimpleLoggerAdvisor simpleLoggerAdvisor() {
@@ -64,6 +60,11 @@ public class AppConfiguration {
 	public ToolCallingManager toolCallingManager() {
 
 		return ToolCallingManager.builder().build();
+	}
+
+	@Bean
+	public ToolCallbackProvider toolCallbackProvider(List<McpSyncClient> clients){
+		return new SyncMcpToolCallbackProvider(clients);
 	}
 
 }

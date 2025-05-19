@@ -19,7 +19,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import org.springframework.ai.mcp.SyncMcpToolCallback;
-import org.springframework.ai.model.function.FunctionCallback;
+
+import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -114,7 +115,7 @@ public final class McpServerUtils {
 		mcpServerConfig.getMcpServers().forEach((key, parameters) -> {
 
 			List<McpServer.Tools> toolsList = new ArrayList<>();
-			for (FunctionCallback toolCallback : toolCallbackProvider.getToolCallbacks()) {
+			for (ToolCallback toolCallback : toolCallbackProvider.getToolCallbacks()) {
 
 				// todo: 拿不到 mcp client, 先用包装器拿吧
 				SyncMcpToolCallback mcpToolCallback = (SyncMcpToolCallback) toolCallback;
@@ -124,9 +125,9 @@ public final class McpServerUtils {
 				// 按照 mcp server name 聚合 mcp server tools
 				if (Objects.equals(key, currentMcpServerName)) {
 					McpServer.Tools tool = new McpServer.Tools();
-					tool.setDesc(toolCallback.getDescription());
-					tool.setName(toolCallback.getName());
-					tool.setParams(toolCallback.getInputTypeSchema());
+					tool.setDesc(toolCallback.getToolDefinition().description());
+					tool.setName(toolCallback.getToolDefinition().name());
+					tool.setParams(toolCallback.getToolDefinition().inputSchema());
 
 					toolsList.add(tool);
 				}

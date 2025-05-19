@@ -28,8 +28,9 @@ import com.alibaba.cloud.ai.application.exception.SAAAppException;
 import com.alibaba.cloud.ai.application.entity.websearch.GenericSearchResult;
 import com.alibaba.cloud.ai.application.entity.websearch.ScorePageItem;
 
+import org.springframework.ai.content.Media;
 import org.springframework.ai.document.Document;
-import org.springframework.ai.model.Media;
+
 import org.springframework.stereotype.Component;
 import org.springframework.util.MimeType;
 

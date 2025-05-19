@@ -28,8 +28,9 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.ai.autoconfigure.mcp.client.StdioTransportAutoConfiguration;
-import org.springframework.ai.autoconfigure.mcp.client.properties.McpStdioClientProperties;
+
+import org.springframework.ai.mcp.client.autoconfigure.StdioTransportAutoConfiguration;
+import org.springframework.ai.mcp.client.autoconfigure.properties.McpStdioClientProperties;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.io.ByteArrayResource;

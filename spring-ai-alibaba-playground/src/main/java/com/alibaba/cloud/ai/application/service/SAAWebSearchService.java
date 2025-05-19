@@ -24,10 +24,11 @@ import com.alibaba.cloud.ai.application.rag.data.DataClean;
 import com.alibaba.cloud.ai.application.rag.join.ConcatenationDocumentJoiner;
 import com.alibaba.cloud.ai.application.rag.prompt.CustomContextQueryAugmenter;
 import com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions;
+import org.springframework.ai.rag.advisor.RetrievalAugmentationAdvisor;
 import reactor.core.publisher.Flux;
 
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.client.advisor.RetrievalAugmentationAdvisor;
+
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.prompt.PromptTemplate;

@@ -17,9 +17,16 @@
 
 spring:
   ai:
+    memory:
+      redis:
+        host: localhost
+        port: 11212
 
     # 向量数据库配置
     vectorstore:
+      mongodb:
+        enabled: true
+
       analytic:
         enabled: false
         dbInstanceId: gp-bp1238pvyz0g78u2m
@@ -35,10 +42,10 @@ spring:
     dashscope:
       api-key: ${AI_DASHSCOPE_API_KEY}
     # 使用自定义增强的 mcp server config 替换
-    # mcp:
-    #   client:
-    #     stdio:
-    #       servers-configuration: classpath:/mcp-servers-config.json
+#    mcp:
+#      client:
+#        stdio:
+#          servers-configuration: classpath:/mcp-config.json
 
     # 需要配置相关 tools 的信息
     alibaba:
@@ -90,6 +97,11 @@ spring:
   iqs:
     search:
       api-key: ${IQS_SEARCH_API_KEY}
+
+
+  data:
+    mongodb:
+      uri: mongodb://127.0.0.1:2701/graph
 
 # enabled debug log out.
 logging:

@@ -47,7 +47,7 @@
 		<spring-ai-alibaba.version>1.0.0-M8.1-SNAPSHOT</spring-ai-alibaba.version>
 
 		<!-- Spring Boot -->
-		<spring-boot.version>3.4.0</spring-boot.version>
+		<spring-boot.version>3.4.5</spring-boot.version>
 
 		<!-- maven plugin -->
 		<maven-deploy-plugin.version>3.1.1</maven-deploy-plugin.version>
@@ -74,7 +74,7 @@
 		<module>spring-ai-alibaba-usecase-example</module>
         <module>spring-ai-alibaba-graph-example</module>
 		
-        </modules>
+	</modules>
 
 	<dependencyManagement>
 		<dependencies>
