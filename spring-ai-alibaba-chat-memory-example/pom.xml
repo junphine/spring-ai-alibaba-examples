@@ -56,8 +56,8 @@
 		<!-- 包含此依赖的 Chat Memory 尚未发布。需要 install 运行！ -->
 		<dependency>
 			<groupId>com.alibaba.cloud.ai</groupId>
-			<artifactId>spring-ai-alibaba-jdbc-memory</artifactId>
-			<version>1.0.0-M6.2-SNAPSHOT</version>
+			<artifactId>spring-ai-alibaba-starter-memory-jdbc</artifactId>
+			<version>${spring-ai-alibaba.version}</version>
 		</dependency>
 
 		<dependency>
@@ -68,8 +68,8 @@
 
 		<dependency>
 			<groupId>com.alibaba.cloud.ai</groupId>
-			<artifactId>spring-ai-alibaba-redis-memory</artifactId>
-			<version>1.0.0-M6.2-SNAPSHOT</version>
+			<artifactId>spring-ai-alibaba-starter-memory-redis</artifactId>
+			<version>${spring-ai-alibaba.version}</version>
 		</dependency>
 
 		<dependency>

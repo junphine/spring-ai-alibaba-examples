@@ -16,6 +16,8 @@
  */
 package com.alibaba.cloud.ai.example.chat.deepseek.controller;
 
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Flux;
 
 import org.springframework.ai.chat.client.ChatClient;
@@ -81,7 +83,7 @@ public class DeepSeekChatClientController {
     /**
      * 流式生成接口 - 支持实时获取生成过程的分块响应
      */
-    @GetMapping("/ai/stream")
+    @GetMapping(value="/ai/stream")
     public Flux<String> stream () {
 
         return this.DeepSeekChatClient.prompt(DEFAULT_PROMPT)

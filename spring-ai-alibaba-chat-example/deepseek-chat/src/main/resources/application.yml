@@ -4,10 +4,12 @@ server:
 spring:
   application:
     name: spring-ai-alibaba-deepseek-chat-model-example
+    codec:
+      default-charset: UTF-8
 
   ai:
     openai:
-      api-key: ${AI_DEEPSEEK_API_KEY}
+      api-key: sk-558a1f1b9957484eb52de0ddc2f9524a
       base-url: https://api.deepseek.com
       chat:
         options:
