@@ -3,7 +3,7 @@ package com.alibaba.cloud.ai.example.rag.controller;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
-import org.springframework.ai.chat.client.advisor.RetrievalAugmentationAdvisor;
+import org.springframework.ai.rag.advisor.RetrievalAugmentationAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.rag.retrieval.search.VectorStoreDocumentRetriever;
 import org.springframework.ai.vectorstore.VectorStore;
@@ -30,37 +30,28 @@ public class ModuleRAGMemoryController {
 
 	private final RetrievalAugmentationAdvisor retrievalAugmentationAdvisor;
 
-	public ModuleRAGMemoryController(
-			ChatClient.Builder chatClientBuilder,
-			ChatMemory chatMemory,
-			VectorStore vectorStore
-	) {
+	public ModuleRAGMemoryController(ChatClient.Builder chatClientBuilder, ChatMemory chatMemory,
+			VectorStore vectorStore) {
 
 		this.chatClient = chatClientBuilder.build();
-		this.chatMemoryAdvisor = MessageChatMemoryAdvisor.builder(chatMemory)
-				.build();
+		this.chatMemoryAdvisor = MessageChatMemoryAdvisor.builder(chatMemory).build();
 
 		this.retrievalAugmentationAdvisor = RetrievalAugmentationAdvisor.builder()
-				.documentRetriever(VectorStoreDocumentRetriever.builder()
-						.similarityThreshold(0.50)
-						.vectorStore(vectorStore)
-						.build())
-				.build();
+			.documentRetriever(
+					VectorStoreDocumentRetriever.builder().similarityThreshold(0.50).vectorStore(vectorStore).build())
+			.build();
 	}
 
 	@PostMapping("/rag/memory/{chatId}")
-	public String chatWithDocument(
-			@RequestBody String prompt,
-			@PathVariable("chatId") String conversationId
-	) {
+	public String chatWithDocument(@RequestBody String prompt, @PathVariable("chatId") String conversationId) {
 
 		return chatClient.prompt()
-				.advisors(chatMemoryAdvisor, retrievalAugmentationAdvisor)
-				.advisors(advisors -> advisors.param(
-						AbstractChatMemoryAdvisor.CHAT_MEMORY_CONVERSATION_ID_KEY, conversationId))
-				.user(prompt)
-				.call()
-				.content();
+			.advisors(chatMemoryAdvisor, retrievalAugmentationAdvisor)
+			.advisors(advisors -> advisors.param(AbstractChatMemoryAdvisor.CHAT_MEMORY_CONVERSATION_ID_KEY,
+					conversationId))
+			.user(prompt)
+			.call()
+			.content();
 	}
 
 }

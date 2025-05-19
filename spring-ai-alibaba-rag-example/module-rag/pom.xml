@@ -51,6 +51,7 @@
 		<dependency>
 			<groupId>org.springframework.ai</groupId>
 			<artifactId>spring-ai-elasticsearch-store-spring-boot-starter</artifactId>
+			<version>1.0.0-M6</version>
 			<exclusions>
 				<exclusion>
 					<groupId>co.elastic.clients</groupId>
@@ -74,6 +75,12 @@
 			<artifactId>elasticsearch-rest-client</artifactId>
 			<groupId>org.elasticsearch.client</groupId>
 			<version>8.13.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.ai</groupId>
+			<artifactId>spring-ai-advisors-vector-store</artifactId>
+			<version>1.0.0-M8</version>
 		</dependency>
 
 		<dependency>

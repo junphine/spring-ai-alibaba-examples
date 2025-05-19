@@ -1,7 +1,7 @@
 package com.alibaba.cloud.ai.example.rag.controller;
 
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.client.advisor.RetrievalAugmentationAdvisor;
+import org.springframework.ai.rag.advisor.RetrievalAugmentationAdvisor;
 import org.springframework.ai.rag.preretrieval.query.transformation.TranslationQueryTransformer;
 import org.springframework.ai.rag.retrieval.search.VectorStoreDocumentRetriever;
 import org.springframework.ai.vectorstore.VectorStore;
@@ -30,29 +30,25 @@ public class ModuleRAGTranslationController {
 		this.chatClient = chatClientBuilder.build();
 
 		var documentRetriever = VectorStoreDocumentRetriever.builder()
-				.vectorStore(vectorStore)
-				.similarityThreshold(0.50)
-				.build();
+			.vectorStore(vectorStore)
+			.similarityThreshold(0.50)
+			.build();
 
 		var queryTransformer = TranslationQueryTransformer.builder()
-				.chatClientBuilder(chatClientBuilder.build().mutate())
-				.targetLanguage("english")
-				.build();
+			.chatClientBuilder(chatClientBuilder.build().mutate())
+			.targetLanguage("english")
+			.build();
 
 		this.retrievalAugmentationAdvisor = RetrievalAugmentationAdvisor.builder()
-				.documentRetriever(documentRetriever)
-				.queryTransformers(queryTransformer)
-				.build();
+			.documentRetriever(documentRetriever)
+			.queryTransformers(queryTransformer)
+			.build();
 	}
 
 	@PostMapping("/rag/translation")
 	public String rag(@RequestBody String prompt) {
 
-		return chatClient.prompt()
-				.advisors(retrievalAugmentationAdvisor)
-				.user(prompt)
-				.call()
-				.content();
+		return chatClient.prompt().advisors(retrievalAugmentationAdvisor).user(prompt).call().content();
 	}
 
 }

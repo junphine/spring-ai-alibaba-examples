@@ -47,6 +47,10 @@
             <version>${spring-ai-alibaba.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-advisors-vector-store</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

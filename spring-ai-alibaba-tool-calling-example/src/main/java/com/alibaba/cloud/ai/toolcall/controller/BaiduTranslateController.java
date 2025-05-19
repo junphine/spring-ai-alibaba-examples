@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 the original author or authors.
+ * Copyright 2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,45 +15,41 @@
  */
 package com.alibaba.cloud.ai.toolcall.controller;
 
-import com.alibaba.cloud.ai.toolcalling.weather.WeatherService;
+import com.alibaba.cloud.ai.toolcalling.baidutranslate.BaiduTranslateService;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.tool.function.FunctionToolCallback;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/weather")
-public class WeatherController {
+@RequestMapping("/translate")
+public class BaiduTranslateController {
 
     private final ChatClient dashScopeChatClient;
-    private final WeatherService weatherService;
 
-    public WeatherController(ChatClient chatClient, WeatherService weatherService) {
+
+    public BaiduTranslateController(ChatClient chatClient, BaiduTranslateService baiduTranslateService) {
         this.dashScopeChatClient = chatClient;
-        this.weatherService = weatherService;
     }
 
     /**
      * No Tool
      */
     @GetMapping("/chat")
-    public String simpleChat(@RequestParam(value = "query", defaultValue = "请告诉我北京1天以后的天气") String query) {
+    public String simpleChat(@RequestParam(value = "query", defaultValue = "帮我把以下内容翻译成英文：你好，世界。") String query) {
         return dashScopeChatClient.prompt(query).call().content();
     }
 
     /**
-     * Function as Tools - FunctionCallBack
+     * Function as Tools - Function Name
      */
-    @GetMapping("/chat-tool-function-name")
-    public String chatTranslateFunction(@RequestParam(value = "query", defaultValue = "请告诉我北京1天以后的天气") String query) {
-        return dashScopeChatClient.prompt(query).toolCallbacks(
-                FunctionToolCallback.builder("getWeather", weatherService)
-                        .description("Use api.weather to get weather information.")
-                        .inputType(WeatherService.Request.class)
-                        .build()
-        ).call().content();
+    @GetMapping("/chat-tool-function-callback")
+    public String chatTranslateFunction(@RequestParam(value = "query", defaultValue = "帮我把以下内容翻译成英文：你好，世界。") String query) {
+        return dashScopeChatClient.prompt(query)
+                .toolNames("baiduTranslate")
+                .call()
+                .content();
     }
 
 }

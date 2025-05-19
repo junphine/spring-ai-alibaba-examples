@@ -35,24 +35,23 @@ import com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions;
  */
 @SpringBootApplication
 public class TranslateApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(TranslateApplication.class, args);
-    }
 
-    @Bean
-    public ChatClient chatClient(OllamaChatModel ollamaChatModel) {
-        return ChatClient.builder(ollamaChatModel)
-                .defaultAdvisors(new SimpleLoggerAdvisor())
-                .build();
-    }
-    
-    @Bean
-    public ChatModel dashScopeChatModel(@Value("${spring.ai.dashscope.api-key:#{null}}") String apiKey) {
-        DashScopeChatOptions options = DashScopeChatOptions.builder()
-                .withModel(DashScopeApi.ChatModel.QWEN_PLUS.getModel())
-                .build();
+	public static void main(String[] args) {
+		SpringApplication.run(TranslateApplication.class, args);
+	}
 
-        DashScopeApi dashScopeApi = new DashScopeApi(apiKey);
-        return new DashScopeChatModel(dashScopeApi, options);
-    }
+	@Bean
+	public ChatClient chatClient(OllamaChatModel ollamaChatModel) {
+		return ChatClient.builder(ollamaChatModel).defaultAdvisors(new SimpleLoggerAdvisor()).build();
+	}
+
+	@Bean
+	public ChatModel dashScopeChatModel(@Value("${spring.ai.dashscope.api-key:#{null}}") String apiKey) {
+		DashScopeChatOptions options = DashScopeChatOptions.builder()
+			.withModel(DashScopeApi.ChatModel.QWEN_PLUS.getModel())
+			.build();
+
+		return DashScopeChatModel.builder().dashScopeApi(new DashScopeApi(apiKey)).defaultOptions(options).build();
+	}
+
 }

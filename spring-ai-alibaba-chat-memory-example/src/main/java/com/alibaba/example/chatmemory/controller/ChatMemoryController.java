@@ -17,7 +17,10 @@
 
 package com.alibaba.example.chatmemory.controller;
 
+import com.alibaba.cloud.ai.memory.redis.RedisChatMemory;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.ai.chat.messages.Message;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 
 import org.springframework.ai.chat.client.ChatClient;
@@ -25,10 +28,8 @@ import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.InMemoryChatMemory;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 import static org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor.CHAT_MEMORY_CONVERSATION_ID_KEY;
 import static org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor.CHAT_MEMORY_RETRIEVE_SIZE_KEY;
@@ -48,15 +49,20 @@ public class ChatMemoryController {
 
 	private final MessageChatMemoryAdvisor redisChatMemory;
 
+	//RedisMemory的另一种写法
+	private final RedisChatMemory redisMemory;
+
 	public ChatMemoryController(
 			ChatModel chatModel,
 			@Qualifier("jdbcMessageChatMemoryAdvisor") MessageChatMemoryAdvisor jdbcChatMemory,
-			@Qualifier("redisMessageChatMemoryAdvisor") MessageChatMemoryAdvisor redisChatMemory
+			@Qualifier("redisMessageChatMemoryAdvisor") MessageChatMemoryAdvisor redisChatMemory,
+			RedisChatMemory redisMemory
 	) {
 
 		this.jdbcChatMemory = jdbcChatMemory;
 		this.redisChatMemory = redisChatMemory;
 		this.chatClient = ChatClient.builder(chatModel).build();
+		this.redisMemory = redisMemory;
 	}
 
 	/**
@@ -123,4 +129,42 @@ public class ChatMemoryController {
 		).stream().content();
 	}
 
+	//RedisMemory的另一种写法
+	/**
+	 * chat对话
+	 */
+	@GetMapping("/chat")
+	public Flux<String> redisChat(
+			@RequestParam("prompt") String prompt,
+			@RequestParam("chatId") String chatId,
+			HttpServletResponse response
+	) {
+
+		response.setCharacterEncoding("UTF-8");
+
+		return chatClient.prompt(prompt)
+				.advisors(new MessageChatMemoryAdvisor(redisMemory))
+				.advisors(
+				a -> a
+						.param(CHAT_MEMORY_CONVERSATION_ID_KEY, chatId)
+						.param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 100)
+				)
+				.stream()
+				.content();
+	}
+
+	/**
+	 * 获取当前对话历史
+	 */
+	@GetMapping("/getRedisMemory")
+	public List<Message> getRedisMemory(String chatId) {
+		List<Message> chatRecord =  redisMemory.get(chatId);
+		return chatRecord;
+	}
+
+	//删除历史对话
+	@DeleteMapping("/deleteRedisMemory")
+	public void deleteHistory(String chatId) {
+		redisMemory.clear(String.valueOf(chatId));
+	}
 }

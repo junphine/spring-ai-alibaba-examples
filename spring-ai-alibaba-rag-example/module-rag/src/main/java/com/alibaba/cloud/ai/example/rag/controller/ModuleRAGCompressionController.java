@@ -3,7 +3,7 @@ package com.alibaba.cloud.ai.example.rag.controller;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
-import org.springframework.ai.chat.client.advisor.RetrievalAugmentationAdvisor;
+import org.springframework.ai.rag.advisor.RetrievalAugmentationAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.rag.preretrieval.query.transformation.CompressionQueryTransformer;
 import org.springframework.ai.rag.retrieval.search.VectorStoreDocumentRetriever;
@@ -32,44 +32,38 @@ public class ModuleRAGCompressionController {
 
 	private final RetrievalAugmentationAdvisor retrievalAugmentationAdvisor;
 
-	public ModuleRAGCompressionController(
-			ChatClient.Builder chatClientBuilder,
-			ChatMemory chatMemory,
+	public ModuleRAGCompressionController(ChatClient.Builder chatClientBuilder, ChatMemory chatMemory,
 			VectorStore vectorStore) {
 
 		this.chatClient = chatClientBuilder.build();
 
-		this.chatMemoryAdvisor = MessageChatMemoryAdvisor.builder(chatMemory)
-				.build();
+		this.chatMemoryAdvisor = MessageChatMemoryAdvisor.builder(chatMemory).build();
 
 		var documentRetriever = VectorStoreDocumentRetriever.builder()
-				.vectorStore(vectorStore)
-				.similarityThreshold(0.50)
-				.build();
+			.vectorStore(vectorStore)
+			.similarityThreshold(0.50)
+			.build();
 
 		var queryTransformer = CompressionQueryTransformer.builder()
-				.chatClientBuilder(chatClientBuilder.build().mutate())
-				.build();
+			.chatClientBuilder(chatClientBuilder.build().mutate())
+			.build();
 
 		this.retrievalAugmentationAdvisor = RetrievalAugmentationAdvisor.builder()
-				.documentRetriever(documentRetriever)
-				.queryTransformers(queryTransformer)
-				.build();
+			.documentRetriever(documentRetriever)
+			.queryTransformers(queryTransformer)
+			.build();
 	}
 
 	@PostMapping("/rag/compression/{chatId}")
-	public String rag(
-			@RequestBody String prompt,
-			@PathVariable("chatId") String conversationId
-	) {
+	public String rag(@RequestBody String prompt, @PathVariable("chatId") String conversationId) {
 
 		return chatClient.prompt()
-				.advisors(chatMemoryAdvisor, retrievalAugmentationAdvisor)
-				.advisors(advisors -> advisors.param(
-						AbstractChatMemoryAdvisor.CHAT_MEMORY_CONVERSATION_ID_KEY, conversationId))
-				.user(prompt)
-				.call()
-				.content();
+			.advisors(chatMemoryAdvisor, retrievalAugmentationAdvisor)
+			.advisors(advisors -> advisors.param(AbstractChatMemoryAdvisor.CHAT_MEMORY_CONVERSATION_ID_KEY,
+					conversationId))
+			.user(prompt)
+			.call()
+			.content();
 	}
 
 }

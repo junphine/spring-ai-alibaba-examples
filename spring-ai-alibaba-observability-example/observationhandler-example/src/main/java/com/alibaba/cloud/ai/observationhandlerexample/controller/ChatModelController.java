@@ -19,8 +19,8 @@ package com.alibaba.cloud.ai.observationhandlerexample.controller;
 import com.alibaba.cloud.ai.observationhandlerexample.observationHandler.CustomerObservationHandler;
 import io.micrometer.observation.ObservationRegistry;
 import org.springframework.ai.ollama.OllamaChatModel;
-import org.springframework.ai.ollama.api.OllamaApi;
 import org.springframework.ai.ollama.api.OllamaOptions;
+import org.springframework.ai.ollama.management.ModelManagementOptions;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,17 +33,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/chat")
 public class ChatModelController {
 
-    @RequestMapping(value = "test", method = RequestMethod.GET)
-    public String add(String message) {
-        ObservationRegistry registry = ObservationRegistry.create();
-        registry.observationConfig().observationHandler(new CustomerObservationHandler());
-        OllamaChatModel ollamaChatModel = new OllamaChatModel(
-                new OllamaApi(),
-                OllamaOptions.builder().model("qwen2.5").build(),
-                null,
-                null,
-                registry,
-                null);
-        return ollamaChatModel.call(message);
-    }
+	@RequestMapping(value = "test", method = RequestMethod.GET)
+	public String add(String message) {
+		ObservationRegistry registry = ObservationRegistry.create();
+		registry.observationConfig().observationHandler(new CustomerObservationHandler());
+		ModelManagementOptions managementOptions = ModelManagementOptions.builder().build();
+		OllamaChatModel ollamaChatModel = OllamaChatModel.builder()
+			.defaultOptions(OllamaOptions.builder().model("qwen2.5").build())
+			.observationRegistry(registry)
+			.modelManagementOptions(managementOptions)
+			.build();
+		return ollamaChatModel.call(message);
+	}
+
 }

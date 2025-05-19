@@ -35,7 +35,7 @@ import org.bytedeco.javacv.Java2DFrameConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.ai.model.Media;
+import org.springframework.ai.content.Media;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.io.PathResource;
@@ -57,7 +57,8 @@ public final class FrameExtraHelper implements ApplicationRunner {
 
 	private static final Map<String, List<String>> IMAGE_CACHE = new ConcurrentHashMap<>();
 
-	private static final File videoUrl = new File("spring-ai-alibaba-multi-model-example/dashscope-multi-model/src/main/resources/multimodel/video.mp4");
+	private static final File videoUrl = new File(
+			"spring-ai-alibaba-multi-model-example/dashscope-multi-model/src/main/resources/multimodel/video.mp4");
 
 	private static final String framePath = "spring-ai-alibaba-multi-model-example/dashscope-multi-model/src/main/resources/multimodel/frame/";
 
@@ -71,10 +72,8 @@ public final class FrameExtraHelper implements ApplicationRunner {
 			dir.mkdirs();
 		}
 
-		try (
-				FFmpegFrameGrabber ff = new FFmpegFrameGrabber(videoUrl.getPath());
-				Java2DFrameConverter converter = new Java2DFrameConverter()
-		) {
+		try (FFmpegFrameGrabber ff = new FFmpegFrameGrabber(videoUrl.getPath());
+				Java2DFrameConverter converter = new Java2DFrameConverter()) {
 			ff.start();
 			ff.setFormat("mp4");
 
@@ -86,7 +85,8 @@ public final class FrameExtraHelper implements ApplicationRunner {
 				if (frame.image == null) {
 					continue;
 				}
-				BufferedImage image = converter.getBufferedImage(frame); ;
+				BufferedImage image = converter.getBufferedImage(frame);
+				;
 				String path = framePath + i + ".png";
 				File picFile = new File(path);
 				ImageIO.write(image, "png", picFile);
@@ -139,12 +139,9 @@ public final class FrameExtraHelper implements ApplicationRunner {
 		int interval = Math.max(totalFrames / numberOfImages, 1);
 
 		return IntStream.range(0, numberOfImages)
-				.mapToObj(i -> imgList.get(i * interval))
-				.map(image -> new Media(
-						MimeType.valueOf("image/png"),
-						new PathResource(image)
-				))
-				.collect(Collectors.toList());
+			.mapToObj(i -> imgList.get(i * interval))
+			.map(image -> new Media(MimeType.valueOf("image/png"), new PathResource(image)))
+			.collect(Collectors.toList());
 	}
 
 }

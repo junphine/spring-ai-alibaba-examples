@@ -23,7 +23,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import reactor.core.publisher.Flux;
 
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
+import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvisor;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.document.Document;
@@ -38,61 +38,53 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/ai")
 public class RagController {
 
-    private final VectorStore vectorStore;
+	private final VectorStore vectorStore;
 
-    private final ChatClient chatClient;
+	private final ChatClient chatClient;
 
-    public RagController(VectorStore vectorStore, ChatClient chatClient) {
-        this.vectorStore = vectorStore;
-        this.chatClient = chatClient;
-    }
+	public RagController(VectorStore vectorStore, ChatClient chatClient) {
+		this.vectorStore = vectorStore;
+		this.chatClient = chatClient;
+	}
 
-    // 历史消息列表
-    private static List<Message> historyMessage = new ArrayList<>();
+	// 历史消息列表
+	private static List<Message> historyMessage = new ArrayList<>();
 
-    // 历史消息列表的最大长度
-    private final static int maxLen = 10;
+	// 历史消息列表的最大长度
+	private final static int maxLen = 10;
 
-    @GetMapping(value = "/chat")
-    public Flux<String> generation(
-            @RequestParam("prompt") String userInput,
-            HttpServletResponse response
-    ) {
+	@GetMapping(value = "/chat")
+	public Flux<String> generation(@RequestParam("prompt") String userInput, HttpServletResponse response) {
 
-        response.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
 
-        // 发起聊天请求并处理响应
-        Flux<String> resp = chatClient.prompt()
-                .messages(historyMessage)
-                .user(userInput)
-                .advisors(new QuestionAnswerAdvisor(
-                        vectorStore,
-                        SearchRequest.builder().build())
-                ).stream()
-                .content();
+		// 发起聊天请求并处理响应
+		Flux<String> resp = chatClient.prompt()
+			.messages(historyMessage)
+			.user(userInput)
+			.advisors(new QuestionAnswerAdvisor(vectorStore, SearchRequest.builder().build()))
+			.stream()
+			.content();
 
-        // 用户输入的文本是 UserMessage
-        historyMessage.add(new UserMessage(userInput));
+		// 用户输入的文本是 UserMessage
+		historyMessage.add(new UserMessage(userInput));
 
-        // 发给 AI 前对历史消息对列的长度进行检查
-        if (historyMessage.size() > maxLen) {
-            historyMessage = historyMessage.subList(historyMessage.size() - maxLen - 1, historyMessage.size());
-        }
+		// 发给 AI 前对历史消息对列的长度进行检查
+		if (historyMessage.size() > maxLen) {
+			historyMessage = historyMessage.subList(historyMessage.size() - maxLen - 1, historyMessage.size());
+		}
 
-        return resp;
-    }
+		return resp;
+	}
 
-    /**
-     * 向量数据查询测试
-     */
-    @GetMapping("/select")
-    public List<Document> search() {
+	/**
+	 * 向量数据查询测试
+	 */
+	@GetMapping("/select")
+	public List<Document> search() {
 
-        return vectorStore.similaritySearch(
-                SearchRequest.builder()
-                        .query("SpringAIAlibaba")
-                        .topK("SpringAIAlibaba".length()
-                        ).build());
-    }
+		return vectorStore.similaritySearch(
+				SearchRequest.builder().query("SpringAIAlibaba").topK("SpringAIAlibaba".length()).build());
+	}
 
 }
