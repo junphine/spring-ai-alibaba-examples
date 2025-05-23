@@ -45,7 +45,6 @@ public class ToolCallAutoConfiguration {
     public ChatClient chatClient(ChatModel chatModel) {
         return ChatClient.builder(chatModel)
                 .defaultAdvisors(new SimpleLoggerAdvisor())
-                .defaultOptions(DashScopeChatOptions.builder().build())
                 .build();
     }
 

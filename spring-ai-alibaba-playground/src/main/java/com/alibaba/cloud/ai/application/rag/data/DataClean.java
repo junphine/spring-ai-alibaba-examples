@@ -17,6 +17,7 @@
 
 package com.alibaba.cloud.ai.application.rag.data;
 
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +31,6 @@ import com.alibaba.cloud.ai.application.entity.websearch.ScorePageItem;
 
 import org.springframework.ai.content.Media;
 import org.springframework.ai.document.Document;
-
 import org.springframework.stereotype.Component;
 import org.springframework.util.MimeType;
 
@@ -44,7 +44,7 @@ import org.springframework.util.MimeType;
 @Component
 public class DataClean {
 
-	public List<Document> getData(GenericSearchResult respData) {
+	public List<Document> getData(GenericSearchResult respData) throws URISyntaxException {
 
 		List<Document> documents = new ArrayList<>();
 
@@ -137,7 +137,7 @@ public class DataClean {
 		return pageItemMetadata;
 	}
 
-	private Media getMedia(ScorePageItem pageItem) {
+	private Media getMedia(ScorePageItem pageItem) throws URISyntaxException {
 
 		String mime = pageItem.getMime();
 		URL url;
@@ -147,8 +147,8 @@ public class DataClean {
 		catch (Exception e) {
 			throw new SAAAppException("Invalid URL: " + pageItem.getLink());
 		}
-
-		return new Media(MimeType.valueOf(mime), url);
+		//TODO Media构造函数变更
+		return new Media(MimeType.valueOf(mime), url.toURI());
 	}
 
 	private String getText(ScorePageItem pageItem) {

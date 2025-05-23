@@ -4,3 +4,7 @@ server:
 spring:
   application:
     name: spring-ai-alibaba-openai-image-example
+  ai:
+    openai:
+      api-key: ${AI_OPENAI_API_KEY}
+      

@@ -1,7 +1,7 @@
 package com.alibaba.cloud.ai.example.rag.controller;
 
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor;
+
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.rag.advisor.RetrievalAugmentationAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import static org.springframework.ai.chat.memory.ChatMemory.CONVERSATION_ID;
 
 /**
  * @author yuluo
@@ -59,7 +61,7 @@ public class ModuleRAGCompressionController {
 
 		return chatClient.prompt()
 			.advisors(chatMemoryAdvisor, retrievalAugmentationAdvisor)
-			.advisors(advisors -> advisors.param(AbstractChatMemoryAdvisor.CHAT_MEMORY_CONVERSATION_ID_KEY,
+			.advisors(advisors -> advisors.param(CONVERSATION_ID,
 					conversationId))
 			.user(prompt)
 			.call()

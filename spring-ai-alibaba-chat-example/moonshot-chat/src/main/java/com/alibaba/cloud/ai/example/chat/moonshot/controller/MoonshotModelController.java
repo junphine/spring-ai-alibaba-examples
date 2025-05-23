@@ -18,6 +18,9 @@
 package com.alibaba.cloud.ai.example.chat.moonshot.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.ai.moonshot.MoonshotChatModel;
+import org.springframework.ai.moonshot.api.MoonshotApi;
+import org.springframework.beans.factory.annotation.Value;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -40,8 +43,26 @@ public class MoonshotModelController {
 
     private final ChatModel moonshotChatModel;
 
-    public MoonshotModelController(ChatModel chatModel) {
-        this.moonshotChatModel = chatModel;
+    public MoonshotModelController(
+        @Value("${spring.ai.moonshot.api-key}") String apikey,
+        @Value("${spring.ai.moonshot.base-url}") String baseUrl
+    ) {
+        MoonshotApi api = MoonshotApi.builder()
+            .baseUrl(baseUrl)
+            .apiKey(apikey)
+            .build();
+
+        MoonshotChatOptions defaultOptions = MoonshotChatOptions.builder()
+            .topP(0.8)
+            .temperature(0.8)
+            .model(MoonshotApi.ChatModel.MOONSHOT_V1_8K.getValue())
+            .build();
+
+        this.moonshotChatModel = MoonshotChatModel
+            .builder()
+            .moonshotApi(api)
+            .defaultOptions(defaultOptions)
+            .build();
     }
 
     /**
@@ -77,7 +98,7 @@ public class MoonshotModelController {
     @GetMapping("/custom/chat")
     public String customChat() {
         MoonshotChatOptions moonshotChatOptions = MoonshotChatOptions.builder()
-                .model("moonshot-v1-32k")
+                .model("moonshot-v1-8k")
                 .topP(0.8)
                 .temperature(0.8)
                 .build();

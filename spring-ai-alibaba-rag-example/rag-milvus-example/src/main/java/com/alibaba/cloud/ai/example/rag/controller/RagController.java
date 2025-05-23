@@ -62,7 +62,11 @@ public class RagController {
 		Flux<String> resp = chatClient.prompt()
 			.messages(historyMessage)
 			.user(userInput)
-			.advisors(new QuestionAnswerAdvisor(vectorStore, SearchRequest.builder().build()))
+			.advisors(QuestionAnswerAdvisor
+					.builder(vectorStore)
+					.searchRequest(SearchRequest.builder().build())
+					.build()
+			)
 			.stream()
 			.content();
 

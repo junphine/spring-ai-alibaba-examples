@@ -4,22 +4,25 @@
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.alibaba.cloud.ai</groupId>
+	<parent>
+		<groupId>com.alibaba.cloud.ai</groupId>
+		<artifactId>spring-ai-alibaba-examples</artifactId>
+		<version>${revision}</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
 	<artifactId>spring-ai-alibaba-playground</artifactId>
-	<version>1.0.0-RC1</version>
+	<version>${revision}</version>
 
 	<description>Spring AI Alibaba Playground</description>
 	<name>Spring AI Alibaba Playground</name>
 
 	<properties>
-		<!-- Spring AI Alibaba -->
-		<spring-ai-alibaba.version>1.0.0-M8.1-SNAPSHOT</spring-ai-alibaba.version>
-
-		<!-- Spring AI -->
-		<spring-ai.version>1.0.0-M8</spring-ai.version>
-
-		<!-- Spring Boot -->
+		<!-- Project revision -->
+		<revision>1.0.0</revision>
 		<spring-boot.version>3.4.5</spring-boot.version>
+		<spring-ai.version>1.0.0</spring-ai.version>
+		<spring-ai-alibaba.version>1.0.0.1</spring-ai-alibaba.version>
 
 		<!-- Node and npm -->
 		<node.version>v20.12.2</node.version>
@@ -40,10 +43,31 @@
 	</properties>
 
 	<dependencies>
+		
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.5.18</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<version>1.5.18</version>
+		</dependency>
 		<!-- Spring Boot Starter -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>logback-classic</artifactId>
+					<groupId>ch.qos.logback</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>logback-core</artifactId>
+					<groupId>ch.qos.logback</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -59,7 +83,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
 		</dependency>
 
 		<dependency>
@@ -97,28 +120,28 @@
 			<version>${spring-ai.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.ai</groupId>
+			<artifactId>spring-ai-advisors-vector-store</artifactId>
+			<version>${spring-ai.version}</version>
+		</dependency>
+
 		<!-- Spring AI Alibaba -->
 		<dependency>
 			<groupId>com.alibaba.cloud.ai</groupId>
-			<artifactId>spring-ai-alibaba-starter</artifactId>
+			<artifactId>spring-ai-alibaba-starter-dashscope</artifactId>
 			<version>${spring-ai-alibaba.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.alibaba.cloud.ai</groupId>
-			<artifactId>spring-ai-alibaba-starter-memory-jdbc</artifactId>
+			<artifactId>spring-ai-alibaba-starter-memory</artifactId>
 			<version>${spring-ai-alibaba.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.alibaba.cloud.ai</groupId>
-			<artifactId>spring-ai-alibaba-starter-memory-redis</artifactId>
-			<version>${spring-ai-alibaba.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.alibaba.cloud.ai</groupId>
-			<artifactId>spring-ai-alibaba-starter-store-ignite</artifactId>
+			<artifactId>spring-ai-alibaba-starter-store-analyticdb</artifactId>
 			<version>${spring-ai-alibaba.version}</version>
 		</dependency>
 
@@ -148,12 +171,6 @@
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 
-		<!-- HttpClient 核心库 -->
-		<dependency>
-			<groupId>org.apache.httpcomponents.client5</groupId>
-			<artifactId>httpclient5</artifactId>
-			<version>5.4.3</version> <!-- 请检查最新版本 -->
-		</dependency>
 
 		<dependency>
 			<groupId>io.micrometer</groupId>
@@ -185,12 +202,6 @@
 			<artifactId>javacv-platform</artifactId>
 			<version>${javacv-platform.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.ai</groupId>
-			<artifactId>spring-ai-advisors-vector-store</artifactId>
-			<version>1.0.0-M8</version>
-			<scope>compile</scope>
-		</dependency>
 
 	</dependencies>
 
@@ -200,6 +211,20 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-dependencies</artifactId>
 				<version>${spring-boot.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.alibaba.cloud.ai</groupId>
+				<artifactId>spring-ai-alibaba-bom</artifactId>
+				<version>${spring-ai-alibaba.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.ai</groupId>
+				<artifactId>spring-ai-bom</artifactId>
+				<version>${spring-ai.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -231,9 +256,6 @@
 				<groupId>com.github.eirslett</groupId>
 				<artifactId>frontend-maven-plugin</artifactId>
 				<version>1.11.0</version>
-				<configuration>
-					<skip>true</skip>
-				</configuration>
 				<executions>
 					<execution>
 						<id>install node and pnpm</id>

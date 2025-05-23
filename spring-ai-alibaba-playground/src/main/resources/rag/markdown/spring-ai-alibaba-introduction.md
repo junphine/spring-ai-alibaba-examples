@@ -126,15 +126,15 @@ Spring AI 提供了从离线数据加载、分析到向量化存储的抽象，�
 > 可参考 [官网文档快速开始](/docs/dev/get-started/) 详细了解如何使用 Spring AI Alibaba 快速开发生成式 AI 应用。
 >
 
-使用 Spring AI Alibaba 开发应用与使用普通 Spring Boot 没有什么区别，只需要增加 `spring-ai-alibaba-starter` 依赖，将 `ChatClient` Bean 注入就可以实现与模型聊天了。
+使用 Spring AI Alibaba 开发应用与使用普通 Spring Boot 没有什么区别，只需要增加 `spring-ai-alibaba-starter-dashscope` 依赖，将 `ChatClient` Bean 注入就可以实现与模型聊天了。
 
 1. 添加依赖
 
 ```xml
 <dependency>
     <groupId>com.alibaba.ai</groupId>
-    <artifactId>spring-ai-alibaba-starter</artifactId>
-    <version>1.0.0-M3.2</version>
+    <artifactId>spring-ai-alibaba-starter-dashscope</artifactId>
+    <version>1.0.0-RC1.1</version>
 </dependency>
 
 ```

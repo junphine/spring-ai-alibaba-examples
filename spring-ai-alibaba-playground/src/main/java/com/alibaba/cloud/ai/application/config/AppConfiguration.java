@@ -17,19 +17,17 @@
 
 package com.alibaba.cloud.ai.application.config;
 
-import io.modelcontextprotocol.client.McpSyncClient;
+//import com.alibaba.cloud.ai.memory.jdbc.SQLiteChatMemory;
+
+import com.alibaba.cloud.ai.memory.jdbc.SQLiteChatMemoryRepository;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
-import org.springframework.ai.mcp.AsyncMcpToolCallbackProvider;
-import org.springframework.ai.mcp.SyncMcpToolCallbackProvider;
+import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.model.tool.ToolCallingManager;
-import org.springframework.ai.tool.ToolCallback;
-import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.List;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  * @author yuluo
@@ -41,6 +39,25 @@ import java.util.List;
 @Configuration
 public class AppConfiguration {
 
+	//TODO SQLiteChatMemory待验证
+	@Bean
+	public ChatMemory SQLiteChatMemory(JdbcTemplate jdbcTemplate) {
+		return MessageWindowChatMemory.builder()
+				.chatMemoryRepository(SQLiteChatMemoryRepository.sqliteBuilder()
+						.jdbcTemplate(jdbcTemplate)
+						.build())
+				.build();
+	}
+
+//	@Bean
+//	public ChatMemory SQLiteChatMemory() {
+//
+//		return new SQLiteChatMemory(
+//				null,
+//				null,
+//				"jdbc:sqlite:src/main/resources/db/saa.db"
+//		);
+//	}
 
 	@Bean
 	public SimpleLoggerAdvisor simpleLoggerAdvisor() {
@@ -52,19 +69,13 @@ public class AppConfiguration {
 	public MessageChatMemoryAdvisor messageChatMemoryAdvisor(
 			ChatMemory sqLiteChatMemory
 	) {
-
-		return new MessageChatMemoryAdvisor(sqLiteChatMemory);
+		return MessageChatMemoryAdvisor.builder(sqLiteChatMemory).build();
 	}
 
 	@Bean
 	public ToolCallingManager toolCallingManager() {
 
 		return ToolCallingManager.builder().build();
-	}
-
-	@Bean
-	public ToolCallbackProvider toolCallbackProvider(List<McpSyncClient> clients){
-		return new SyncMcpToolCallbackProvider(clients);
 	}
 
 }

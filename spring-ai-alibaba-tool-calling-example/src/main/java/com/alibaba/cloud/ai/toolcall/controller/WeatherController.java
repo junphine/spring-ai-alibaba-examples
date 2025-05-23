@@ -47,7 +47,7 @@ public class WeatherController {
      * Function as Tools - FunctionCallBack
      */
     @GetMapping("/chat-tool-function-name")
-    public String chatTranslateFunction(@RequestParam(value = "query", defaultValue = "请告诉我北京1天以后的天气") String query) {
+    public String chatWithWeatherFunction(@RequestParam(value = "query", defaultValue = "请告诉我北京1天以后的天气") String query) {
         return dashScopeChatClient.prompt(query).toolCallbacks(
                 FunctionToolCallback.builder("getWeather", weatherService)
                         .description("Use api.weather to get weather information.")

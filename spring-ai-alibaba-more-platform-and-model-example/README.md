@@ -23,7 +23,7 @@
 ```xml
 <dependency>
     <groupId>com.alibaba.cloud.ai</groupId>
-    <artifactId>spring-ai-alibaba-starter</artifactId>
+    <artifactId>spring-ai-alibaba-starter-dashscope</artifactId>
 </dependency>
 
 <dependency>

@@ -23,5 +23,3 @@ spring:
 #          model: ${OPENAI_MODEL_ID}
 #        # Chat接口路径,与OpenAI接口保持一致
 #        completions-path: /v3/chat/completions
-
-

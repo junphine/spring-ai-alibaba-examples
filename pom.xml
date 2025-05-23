@@ -41,10 +41,10 @@
 		<maven.compiler.target>17</maven.compiler.target>
 
 		<!-- Spring AI -->
-		<spring-ai.version>1.0.0-M8</spring-ai.version>
+		<spring-ai.version>1.0.0</spring-ai.version>
 
 		<!-- Spring AI Alibaba -->
-		<spring-ai-alibaba.version>1.0.0-M8.1-SNAPSHOT</spring-ai-alibaba.version>
+		<spring-ai-alibaba.version>1.0.0.1</spring-ai-alibaba.version>
 
 		<!-- Spring Boot -->
 		<spring-boot.version>3.4.5</spring-boot.version>
@@ -56,24 +56,24 @@
 	</properties>
 
 	<modules>
+		<module>spring-ai-alibaba-playground</module>
 		<module>spring-ai-alibaba-helloworld</module>
-		<module>spring-ai-alibaba-audio-example</module>
-		<module>spring-ai-alibaba-chat-example</module>
-		<module>spring-ai-alibaba-agent-example</module>
-		<module>spring-ai-alibaba-image-example</module>
-		<module>spring-ai-alibaba-tool-calling-example</module>
-		<module>spring-ai-alibaba-multi-model-example</module>
-		<module>spring-ai-alibaba-observability-example</module>
-		<module>spring-ai-alibaba-prompt-example</module>
-		<module>spring-ai-alibaba-rag-example</module>
-		<module>spring-ai-alibaba-structured-example</module>
 		<module>spring-ai-alibaba-mcp-example</module>
-		<module>spring-ai-alibaba-nacos-example</module>
-		<module>spring-ai-alibaba-more-platform-and-model-example</module>
-		<module>spring-ai-alibaba-chat-memory-example</module>
+		<module>spring-ai-alibaba-rag-example</module>
+		<module>spring-ai-alibaba-chat-example</module>
+		<module>spring-ai-alibaba-audio-example</module>
+		<module>spring-ai-alibaba-agent-example</module>
+		<module>spring-ai-alibaba-graph-example</module>
+		<module>spring-ai-alibaba-image-example</module>
+		<module>spring-ai-alibaba-prompt-example</module>
 		<module>spring-ai-alibaba-usecase-example</module>
-        <module>spring-ai-alibaba-graph-example</module>
-		
+		<module>spring-ai-alibaba-structured-example</module>
+		<module>spring-ai-alibaba-multi-model-example</module>
+		<module>spring-ai-alibaba-chat-memory-example</module>
+		<module>spring-ai-alibaba-tool-calling-example</module>
+		<module>spring-ai-alibaba-nacos-prompt-example</module>
+		<module>spring-ai-alibaba-observability-example</module>
+		<module>spring-ai-alibaba-more-platform-and-model-example</module>
 	</modules>
 
 	<dependencyManagement>
@@ -94,9 +94,12 @@
 			</dependency>
 			<dependency>
 				<groupId>com.alibaba.cloud.ai</groupId>
-				<artifactId>spring-ai-alibaba-starter</artifactId>
+				<artifactId>spring-ai-alibaba-bom</artifactId>
 				<version>${spring-ai-alibaba.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
 			</dependency>
+			
 		</dependencies>
 	</dependencyManagement>
 

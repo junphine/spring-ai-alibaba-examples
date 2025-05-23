@@ -30,7 +30,6 @@ import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.rag.Query;
 import org.springframework.ai.rag.generation.augmentation.QueryAugmenter;
-
 import org.springframework.ai.rag.util.PromptAssert;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;

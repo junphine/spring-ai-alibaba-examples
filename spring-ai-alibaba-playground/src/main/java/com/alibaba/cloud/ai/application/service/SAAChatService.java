@@ -19,6 +19,7 @@ package com.alibaba.cloud.ai.application.service;
 
 import com.alibaba.cloud.ai.dashscope.api.DashScopeResponseFormat;
 import com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions;
+import org.springframework.ai.chat.memory.ChatMemory;
 import reactor.core.publisher.Flux;
 
 import org.springframework.ai.chat.client.ChatClient;
@@ -28,9 +29,6 @@ import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
-import static org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor.CHAT_MEMORY_CONVERSATION_ID_KEY;
-import static org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor.CHAT_MEMORY_RETRIEVE_SIZE_KEY;
 
 /**
  * @author yuluo
@@ -75,8 +73,7 @@ public class SAAChatService {
 						).build()
 				).user(prompt)
 				.advisors(memoryAdvisor -> memoryAdvisor
-						.param(CHAT_MEMORY_CONVERSATION_ID_KEY, chatId)
-						.param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 100)
+						.param(ChatMemory.CONVERSATION_ID, chatId)
 				).stream()
 				.content();
 	}
@@ -94,8 +91,7 @@ public class SAAChatService {
 				).system(deepThinkPromptTemplate.getTemplate())
 				.user(prompt)
 				.advisors(memoryAdvisor -> memoryAdvisor
-						.param(CHAT_MEMORY_CONVERSATION_ID_KEY, chatId)
-						.param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 100)
+						.param(ChatMemory.CONVERSATION_ID, chatId)
 				).stream()
 				.content();
 	}

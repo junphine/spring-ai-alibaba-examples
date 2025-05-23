@@ -15,7 +15,6 @@
 	<description>Spring AI Alibaba Ollama Chat Example</description>
 	<name>Spring AI Alibaba Ollama Chat Examples</name>
 
-
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

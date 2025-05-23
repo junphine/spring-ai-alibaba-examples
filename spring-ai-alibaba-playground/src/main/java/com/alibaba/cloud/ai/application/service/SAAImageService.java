@@ -21,12 +21,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 
 import com.alibaba.cloud.ai.application.utils.FilesUtils;
 import com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions;
 import com.alibaba.cloud.ai.dashscope.chat.MessageFormat;
 import com.alibaba.cloud.ai.dashscope.image.DashScopeImageOptions;
+import com.google.common.collect.Lists;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.ai.content.Media;
 import reactor.core.publisher.Flux;
@@ -36,6 +38,7 @@ import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.ai.content.Media;
 import org.springframework.ai.image.ImageGeneration;
 import org.springframework.ai.image.ImageModel;
 import org.springframework.ai.image.ImagePrompt;
@@ -84,13 +87,19 @@ public class SAAImageService {
 	public Flux<String> image2Text(String prompt, MultipartFile file) throws IOException {
 
 		String filePath = FilesUtils.saveTempFile(file, "/tmp/image/");
-		UserMessage message = new UserMessage(
-				prompt,
-				new Media(
-						MimeTypeUtils.IMAGE_PNG,
-						new FileSystemResource(filePath)
-				)
-		);
+//		UserMessage message = new UserMessage(
+//				prompt,
+//				new Media(
+//						MimeTypeUtils.IMAGE_PNG,
+//						new FileSystemResource(filePath)
+//				)
+//		);
+		List<Media> mediaList = Lists.newArrayList(new Media(
+				MimeTypeUtils.IMAGE_PNG,
+				new FileSystemResource(filePath)
+		));
+		UserMessage message =
+				UserMessage.builder().text(prompt).media(mediaList).metadata(new HashMap<>()).build();
 		message.getMetadata().put(MESSAGE_FORMAT, MessageFormat.IMAGE);
 
 		List<ChatResponse> response = daschScopeChatClient.prompt(

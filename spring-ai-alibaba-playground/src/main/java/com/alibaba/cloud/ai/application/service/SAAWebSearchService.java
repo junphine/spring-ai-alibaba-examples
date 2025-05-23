@@ -24,15 +24,13 @@ import com.alibaba.cloud.ai.application.rag.data.DataClean;
 import com.alibaba.cloud.ai.application.rag.join.ConcatenationDocumentJoiner;
 import com.alibaba.cloud.ai.application.rag.prompt.CustomContextQueryAugmenter;
 import com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions;
-import org.springframework.ai.rag.advisor.RetrievalAugmentationAdvisor;
 import reactor.core.publisher.Flux;
 
 import org.springframework.ai.chat.client.ChatClient;
-
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.prompt.PromptTemplate;
-import org.springframework.ai.rag.postretrieval.ranking.DocumentRanker;
+import org.springframework.ai.rag.advisor.RetrievalAugmentationAdvisor;
 import org.springframework.ai.rag.preretrieval.query.expansion.QueryExpander;
 import org.springframework.ai.rag.preretrieval.query.transformation.QueryTransformer;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -63,11 +61,12 @@ public class SAAWebSearchService {
 	// It works better here with DeepSeek-R1
 	private static final String DEFAULT_WEB_SEARCH_MODEL = "deepseek-r1";
 
+	//TODO DocumentRanker缺失
 	public SAAWebSearchService(
 			DataClean dataCleaner,
 			QueryExpander queryExpander,
 			IQSSearchEngine searchEngine,
-			DocumentRanker documentRanker,
+//			DocumentRanker documentRanker,
 			QueryTransformer queryTransformer,
 			SimpleLoggerAdvisor simpleLoggerAdvisor,
 			@Qualifier("dashscopeChatModel") ChatModel chatModel,
@@ -99,7 +98,7 @@ public class SAAWebSearchService {
 				.dataCleaner(dataCleaner)
 				.maxResults(2)
 				.enableRanker(true)
-				.documentRanker(documentRanker)
+//				.documentRanker(documentRanker)
 				.build();
 	}
 

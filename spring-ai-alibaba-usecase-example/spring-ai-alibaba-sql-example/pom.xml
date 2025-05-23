@@ -41,8 +41,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.alibaba.cloud.ai</groupId>
-			<artifactId>spring-ai-alibaba-starter</artifactId>
-			<version>${spring-ai-alibaba.version}</version>
+			<artifactId>spring-ai-alibaba-starter-dashscope</artifactId>
 		</dependency>
 
 		<dependency>

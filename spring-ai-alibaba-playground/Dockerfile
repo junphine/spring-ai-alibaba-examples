@@ -18,14 +18,16 @@ RUN apt-get update && \
 # 从构建阶段复制构建好的jar
 COPY target/app.jar ./app.jar
 
-# 创建需要挂载的目录
-RUN mkdir -p /app/resources/mcp-libs \
-    /app/resources/rag/markdown \
-    /app/resources/db \
-    /app/logs
+# 创建日志目录
+RUN mkdir -p /app/logs
 
-# 声明挂载点
-VOLUME ["/app/resources/mcp-libs", "/app/src/main/resources", "/app/resources/rag/markdown", "/app/logs"]
+# 复制所需的资源文件到镜像中
+COPY src/main/resources/mcp-libs /app/mcp-libs
+COPY src/main/resources/rag/markdown /app/rag/markdown
+COPY src/main/resources /app/src/main/resources
+
+# 日志目录仍然挂载为卷，便于查看日志
+VOLUME ["/app/logs"]
 
 # 设置环境变量
 ENV BAIDU_TRANSLATE_APP_ID=${BAIDU_TRANSLATE_APP_ID} \
@@ -42,4 +44,4 @@ ENTRYPOINT ["java", "-XX:+UseContainerSupport", "-XX:MaxRAMPercentage=75.0", "-D
 
 # 健康检查
 HEALTHCHECK --interval=30s --timeout=3s \
-  CMD wget -q -O /dev/null http://localhost:8080/actuator/health || exit 1 
+  CMD wget -q -O /dev/null http://localhost:8080/actuator/health || exit 1

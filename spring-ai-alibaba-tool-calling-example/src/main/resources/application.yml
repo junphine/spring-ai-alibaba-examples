@@ -17,5 +17,11 @@ spring:
           enabled: true
           api-key: ${WEATHER_API_KEY}
 
+        githubtoolkit:
+          enabled: true
+          token: ${GITHUB_TOKEN}
+          owner: ${GITHUB_OWNER}
+          repository: ${GITHUB_REPOSITORY}
+
     dashscope:
       api-key: ${AI_DASHSCOPE_API_KEY}

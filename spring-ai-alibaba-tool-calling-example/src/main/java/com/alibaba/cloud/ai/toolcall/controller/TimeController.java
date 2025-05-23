@@ -46,7 +46,7 @@ public class TimeController {
      * Methods as Tools
      */
     @GetMapping("/chat-tool-method")
-    public String chatTranslateMethod(@RequestParam(value = "query", defaultValue = "请告诉我现在北京时间几点了") String query) {
+    public String chatWithTimeFunction(@RequestParam(value = "query", defaultValue = "请告诉我现在北京时间几点了") String query) {
         return dashScopeChatClient.prompt(query).tools(timeTools).call().content();
     }
 

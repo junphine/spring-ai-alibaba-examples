@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -95,7 +96,9 @@ public class SAAVideoService  {
         }
 
         // 5. 创建包含问题和帧图片的用户消息
-        UserMessage message = new UserMessage(prompt, mediaList);
+//        UserMessage message = new UserMessage(prompt, mediaList);
+        UserMessage message =
+                UserMessage.builder().text(prompt).media(mediaList).metadata(new HashMap<>()).build();
 
         // 6. 调用AI服务进行分析
         List<ChatResponse> response = daschScopeChatClient.prompt(

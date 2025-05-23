@@ -17,26 +17,26 @@
 
 package com.alibaba.cloud.ai.application.rag;
 
-import java.util.List;
-
+import com.alibaba.cloud.ai.application.entity.websearch.GenericSearchResult;
 import com.alibaba.cloud.ai.application.rag.core.IQSSearchEngine;
 import com.alibaba.cloud.ai.application.rag.data.DataClean;
-import com.alibaba.cloud.ai.application.entity.websearch.GenericSearchResult;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.ai.document.Document;
 import org.springframework.ai.rag.Query;
-import org.springframework.ai.rag.postretrieval.ranking.DocumentRanker;
 import org.springframework.ai.rag.retrieval.search.DocumentRetriever;
 import org.springframework.lang.Nullable;
+
+import java.net.URISyntaxException;
+import java.util.List;
 
 /**
  * @author yuluo
  * @author <a href="mailto:yuluo08290126@gmail.com">yuluo</a>
  */
 
+//TOOD spring-ai新版本不支持DocumentRanker，对象缺失
 public class WebSearchRetriever implements DocumentRetriever {
 
 	private static final Logger logger = LoggerFactory.getLogger(WebSearchRetriever.class);
@@ -47,7 +47,7 @@ public class WebSearchRetriever implements DocumentRetriever {
 
 	private final DataClean dataCleaner;
 
-	private final DocumentRanker documentRanker;
+//	private final DocumentRanker documentRanker;
 
 	private final boolean enableRanker;
 
@@ -56,7 +56,7 @@ public class WebSearchRetriever implements DocumentRetriever {
 		this.searchEngine = builder.searchEngine;
 		this.maxResults = builder.maxResults;
 		this.dataCleaner = builder.dataCleaner;
-		this.documentRanker = builder.documentRanker;
+//		this.documentRanker = builder.documentRanker;
 		this.enableRanker = builder.enableRanker;
 	}
 
@@ -70,8 +70,13 @@ public class WebSearchRetriever implements DocumentRetriever {
 		GenericSearchResult searchResp = searchEngine.search(query.text());
 
 		// 清洗数据
-		List<Document> cleanerData = dataCleaner.getData(searchResp);
-		logger.debug("cleaner data: {}", cleanerData);
+        List<Document> cleanerData = null;
+        try {
+            cleanerData = dataCleaner.getData(searchResp);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        logger.debug("cleaner data: {}", cleanerData);
 
 		// 返回结果
 		List<Document> documents = dataCleaner.limitResults(cleanerData, maxResults);
@@ -93,9 +98,10 @@ public class WebSearchRetriever implements DocumentRetriever {
 
 		try {
 
-			List<Document> rankedDocuments = documentRanker.rank(query, documents);
-			logger.debug("WebSearchRetriever#ranking() Ranked documents: {}", rankedDocuments.stream().map(Document::getId).toArray());
-			return rankedDocuments;
+//			List<Document> rankedDocuments = documentRanker.rank(query, documents);
+//			logger.debug("WebSearchRetriever#ranking() Ranked documents: {}", rankedDocuments.stream().map(Document::getId).toArray());
+//			return rankedDocuments;
+			return documents;
 		} catch (Exception e) {
 			// 降级返回原始结果
 			logger.error("ranking error", e);
@@ -116,7 +122,7 @@ public class WebSearchRetriever implements DocumentRetriever {
 
 		private DataClean dataCleaner;
 
-		private DocumentRanker documentRanker;
+//		private DocumentRanker documentRanker;
 
 		// 默认开启 ranking
 		private Boolean enableRanker = true;
@@ -139,10 +145,10 @@ public class WebSearchRetriever implements DocumentRetriever {
 			return this;
 		}
 
-		public WebSearchRetriever.Builder documentRanker(DocumentRanker documentRanker) {
-			this.documentRanker = documentRanker;
-			return this;
-		}
+//		public WebSearchRetriever.Builder documentRanker(DocumentRanker documentRanker) {
+//			this.documentRanker = documentRanker;
+//			return this;
+//		}
 
 		public WebSearchRetriever.Builder enableRanker(Boolean enableRanker) {
 			this.enableRanker = enableRanker;

@@ -25,6 +25,7 @@ import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.ai.converter.BeanOutputConverter;
+import org.springframework.ai.template.st.StTemplateRenderer;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -100,7 +101,14 @@ public class BeanController {
     @GetMapping("/chat-model-format")
     public String chatModel(@RequestParam(value = "query", defaultValue = "以影子为作者，写一篇200字左右的有关人工智能诗篇") String query) {
         String template = query + "{format}";
-        Prompt prompt = new PromptTemplate(template, Map.of("format", format)).create();
+
+        PromptTemplate promptTemplate = PromptTemplate.builder()
+            .template(template)
+            .variables(Map.of("format", format))
+            .renderer(StTemplateRenderer.builder().build())
+            .build();
+
+        Prompt prompt = promptTemplate.create();
 
         String result = chatModel.call(prompt).getResult().getOutput().getText();
         log.info("result: {}", result);

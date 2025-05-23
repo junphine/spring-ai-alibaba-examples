@@ -1,7 +1,7 @@
 package com.alibaba.cloud.ai.example.rag;
 
 import org.springframework.ai.chat.memory.ChatMemory;
-import org.springframework.ai.chat.memory.InMemoryChatMemory;
+import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +22,7 @@ public class ModuleRAGApplication {
 	@Bean
 	public ChatMemory chatMemory() {
 
-		return new InMemoryChatMemory();
+		return MessageWindowChatMemory.builder().build();
 	}
 
 }

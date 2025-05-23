@@ -23,11 +23,11 @@ import reactor.core.publisher.Flux;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
-import org.springframework.ai.chat.memory.InMemoryChatMemory;
+import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
-import org.springframework.ai.openai.OpenAiChatModel;
-import org.springframework.ai.openai.OpenAiChatOptions;
+import org.springframework.ai.deepseek.DeepSeekChatModel;
+import org.springframework.ai.deepseek.DeepSeekChatOptions;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,16 +41,15 @@ public class DeepSeekChatClientController {
 
     private static final String DEFAULT_PROMPT = "你好，介绍下你自己！";
 
-
     private final ChatClient DeepSeekChatClient;
 
-    public DeepSeekChatClientController (OpenAiChatModel chatModel) {
+    public DeepSeekChatClientController (DeepSeekChatModel chatModel) {
 
-        this.DeepSeekChatClient = ChatClient.builder(chatModel).defaultAdvisors(new MessageChatMemoryAdvisor(new InMemoryChatMemory()))
+        this.DeepSeekChatClient = ChatClient.builder(chatModel).defaultAdvisors(MessageChatMemoryAdvisor.builder(MessageWindowChatMemory.builder().build()).build())
                 // 实现 Logger 的 Advisor
                 .defaultAdvisors(new SimpleLoggerAdvisor())
                 // 设置 ChatClient 中 ChatModel 的 Options 参数
-                .defaultOptions(OpenAiChatOptions.builder().temperature(0.7d).build()).build();
+                .defaultOptions(DeepSeekChatOptions.builder().temperature(0.7d).build()).build();
     }
 
     /**
@@ -64,7 +63,7 @@ public class DeepSeekChatClientController {
 
         return this.DeepSeekChatClient.prompt(new Prompt(
                 "Generate the names of 5 famous pirates.",
-                        OpenAiChatOptions.builder().temperature(0.75).build())
+                        DeepSeekChatOptions.builder().temperature(0.75).build())
                 ).call()
                 .chatResponse();
     }

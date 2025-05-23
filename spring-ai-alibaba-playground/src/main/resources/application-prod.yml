@@ -25,6 +25,10 @@ spring:
     #     stdio:
     #       servers-configuration: classpath:/mcp-servers-config.json
 
+    mcp:
+      client:
+        toolcallback:
+          enabled: true
     alibaba:
       tool-calling:
         baidu:

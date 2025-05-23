@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 import com.alibaba.cloud.ai.application.exception.SAAAppException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.ai.chat.memory.ChatMemory;
 import reactor.core.publisher.Flux;
 
 import org.springframework.ai.chat.client.ChatClient;
@@ -38,8 +39,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import static org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor.CHAT_MEMORY_CONVERSATION_ID_KEY;
-import static org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor.CHAT_MEMORY_RETRIEVE_SIZE_KEY;
 
 /**
  * @author yuluo
@@ -79,8 +78,7 @@ public class SAASummarizerService {
 		return chatClient.prompt()
 				.user("Summarize the document")
 				.advisors(memoryAdvisor -> memoryAdvisor
-						.param(CHAT_MEMORY_CONVERSATION_ID_KEY, chatId)
-						.param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 100)
+						.param(ChatMemory.CONVERSATION_ID, chatId)
 				).user(text)
 				.stream().content();
 	}

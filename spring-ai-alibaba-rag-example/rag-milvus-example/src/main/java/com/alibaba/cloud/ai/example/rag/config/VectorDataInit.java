@@ -43,7 +43,7 @@ public class VectorDataInit implements ApplicationRunner {
 	public void run(ApplicationArguments args) {
 
 		List<Document> documents = List.of(
-				new Document("1. 使用SpringAIAlibaba创建一个Spring Boot项目，并添加spring-ai-alibaba-starter依赖。"),
+				new Document("1. 使用SpringAIAlibaba创建一个Spring Boot项目，并添加spring-ai-alibaba-starter-dashscope依赖。"),
 				new Document("2. 在SpringAIAlibaba项目的pom.xml中添加Spring Milestone和Snapshot存储库。"),
 				new Document("3. 通过SpringAIAlibaba申请阿里云通义API Key，在application.yml中进行配置。"),
 				new Document("4. 使用SpringAIAlibaba的ChatClient和Prompt功能实现对话模型。"),

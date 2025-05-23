@@ -36,13 +36,14 @@
 	<name>Spring AI Alibaba Chat Examples</name>
 
 	<modules>
-		<module>dashscope-chat</module>
 		<module>qwq-chat</module>
-		<module>deepseek-chat</module>
-		<module>openai-chat</module>
 		<module>ollama-chat</module>
+		<module>openai-chat</module>
 		<module>zhipuai-chat</module>
-		<module>moonshot-chat</module>
+		<!-- 编译不通过，暂时注释 -->
+		<!--<module>moonshot-chat</module>-->
+		<module>deepseek-chat</module>
+		<module>dashscope-chat</module>
 	</modules>
 
 	<build>

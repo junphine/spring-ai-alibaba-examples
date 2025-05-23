@@ -19,6 +19,7 @@
 package com.alibaba.example.graph.conf;
 
 import com.alibaba.cloud.ai.graph.*;
+import com.alibaba.cloud.ai.graph.exception.GraphStateException;
 import com.alibaba.example.graph.dispatcher.FeedbackDispatcher;
 import com.alibaba.example.graph.node.RewordingNode;
 import com.alibaba.example.graph.node.SummarizerNode;

@@ -1,12 +1,13 @@
 package com.alibaba.example.chatmemory.config;
 
-import com.alibaba.cloud.ai.memory.jdbc.SQLiteChatMemory;
-import com.alibaba.cloud.ai.memory.redis.RedisChatMemory;
-
+import com.alibaba.cloud.ai.memory.jdbc.SQLiteChatMemoryRepository;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 /**
  * @author yuluo
@@ -18,42 +19,21 @@ public class AppConfig {
 
 	@Bean
 	public ChatMemory SQLiteChatMemory() {
-
-		return new SQLiteChatMemory(
-				null,
-				null,
-				"jdbc:sqlite:spring-ai-alibaba-chat-memory-example/src/main/resources/chat-memory.db"
-		);
+		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+		dataSource.setDriverClassName("org.sqlite.JDBC");
+		dataSource.setUrl("jdbc:sqlite:spring-ai-alibaba-chat-memory-example/src/main/resources/chat-memory.db");
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		return MessageWindowChatMemory.builder()
+				.chatMemoryRepository(SQLiteChatMemoryRepository.sqliteBuilder()
+						.jdbcTemplate(jdbcTemplate)
+						.build())
+				.build();
 	}
 
 	@Bean
 	public MessageChatMemoryAdvisor jdbcMessageChatMemoryAdvisor(
-			ChatMemory sqLiteChatMemory
+			ChatMemory SQLiteChatMemory
 	) {
-
-		return new MessageChatMemoryAdvisor(sqLiteChatMemory);
+		return MessageChatMemoryAdvisor.builder(SQLiteChatMemory).build();
 	}
-
-	@Bean
-	public MessageChatMemoryAdvisor redisMessageChatMemoryAdvisor() {
-
-		return new MessageChatMemoryAdvisor(new RedisChatMemory(
-				"127.0.0.1",
-				6379,
-				null,
-				10
-		));
-	}
-
-	//RedisMemory的另一种写法
-	@Bean
-	public RedisChatMemory redisChatMemory() {
-		return new RedisChatMemory(
-				"127.0.0.1",
-				6379,
-				null,
-				10
-		);
-	}
-
 }
