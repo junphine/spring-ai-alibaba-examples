@@ -25,6 +25,11 @@ spring:
     mcp:
       server:
         name: my-weather-server
-        version: 0.0.1
+        version: 0.0.
+
+jdbc:
+  url: jdbc:postgresql://localhost:5432/health_db
+  username: postgres
+  password: 332584185
 
 # logging.pattern.console=

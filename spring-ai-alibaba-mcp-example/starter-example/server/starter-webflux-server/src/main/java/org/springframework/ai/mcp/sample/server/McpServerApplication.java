@@ -34,8 +34,8 @@ public class McpServerApplication {
     }
 
     @Bean
-    public ToolCallbackProvider weatherTools(OpenMeteoService openMeteoService) {
-        return MethodToolCallbackProvider.builder().toolObjects(openMeteoService).build();
+    public ToolCallbackProvider weatherTools(OpenMeteoService openMeteoService,JDBCService jdbcService) {
+        return MethodToolCallbackProvider.builder().toolObjects(openMeteoService,jdbcService).build();
     }
 
 }
